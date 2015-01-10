@@ -1,0 +1,16 @@
+pom.xml
+*jar
+/lib/
+/classes/
+/target/
+/.lein-*
+/.nrepl-port
+.\#*
+/resources
+dev
+.repl*
+/out
+*.js
+*.js.map
+*.html
+/junk
