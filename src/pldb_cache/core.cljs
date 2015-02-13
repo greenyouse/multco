@@ -7,11 +7,9 @@
 
 ;; taken from clodexeddb to save from having to include it in deps
 (defn setup
-  "Defines a new database with a given schema. The schema is standard ydn-db
-  style but with ClojureScript syntax. See here for more information:
-  http://dev.yathit.com/ydn-db/doc/setup/schema.html"
-  [name schema]
-  (cldb/setup name schema))
+  "Defines a new clientside database."
+  [name]
+  (cldb/setup name))
 
 (def ^:private trans-chan (chan))
 
@@ -71,3 +69,14 @@
                                        (:value)
                                        (reader/read-string))]
                         (reset! logic-db-atom new-db))))))
+
+(defn clear
+  "Erases all state from a database (removes an object store from clientside
+  storage)."
+  [db name]
+  (cldb/clear db "database" name))
+
+(defn rm-db
+  "Removes a database from clientside storage. Use the same db name from setup."
+  [db-name]
+  (cldb/rm-db db-name))

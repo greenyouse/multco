@@ -1,4 +1,4 @@
-(ns star-wars
+(ns example.star-wars
   (:require [pldb-cache.core :as pc]
             [clodexeddb.core :as cldb]
             [cljs.core.logic.pldb :as pldb])
@@ -12,10 +12,7 @@
 ;; Define a clodexeddb database for your app. Use this schema whenever
 ;; you use pldb-cache.
 (def test-db
-  (pc/setup "test" {:stores [{:name "database"
-                                :keyPath "name"
-                                :indexes [{:keyPath "value"
-                                           :type "TEXT"}]}]}))
+  (pc/setup "test"))
 
 ;; Store each pldb database in separate atoms, we're only using one here.
 (def test-atom
@@ -146,7 +143,7 @@
 
 ;; Looks like Jar Jar is stuck in our database (oh no) and everything worked!
 ;; If you want to delete this experiment do:
-(cldb/clear test-db "database" "characters")
+(pc/clear test-db "characters")
 
 ;; and here's how to delete the entire database:
-(cldb/rm-db "test")
+(pc/rm-db "test")

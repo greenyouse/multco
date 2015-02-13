@@ -16,13 +16,8 @@ Before doing anything, declare a new clientside database using `setup`:
 
 ```clj
 (def db
-  (p-cache/setup "my-db" {:stores [{:name "database"
-                                  :keyPath "name"
-                                  :indexes [{:keyPath "value"
-                                             :type "TEXT"}]}]}))
+  (p-cache/setup "my-db"))
 ```
-
-The schema above should be used for all your `pldb-cache` projects.
 
 When your program starts, load the database using `init-facts`. This
 will either load a given data template, if the  program database has
@@ -52,6 +47,14 @@ To remove data use `remove-facts!`:
 (p-cache/remove-facts! db "my-app" app-atom [rm some fact(s)])
 ```
 
+If you need to delete things, `clear` will empty a database and `rm-db`
+will remove a database from clientside storage.
+
+```clj
+(p-cache/clear db "my-app")
+
+(p-cache/rm-db "my-db")
+```
 
 ## Examples
 
