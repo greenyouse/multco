@@ -26,8 +26,7 @@ never been altered, or load the lastest stored state of your program.
 ```clj
 (defonce some-data-template
    (p-cache/init-facts app-db "my-app" app-atom
-     (pldb/db
-      [database code goes here])))
+                       [database code goes here]))
 ```
 
 This means persistent clientside storage for your app! The database is
@@ -47,6 +46,12 @@ To remove data use `remove-facts!`:
 (p-cache/remove-facts! db "my-app" app-atom [rm some fact(s)])
 ```
 
+A database can also be reset using `reset-facts!`:
+
+```clj
+(p-cache/reset-facts! db "my-app" app-atom [new fact(s) to use])
+```
+
 If you need to delete things, `clear` will empty a database and `rm-db`
 will remove a database from clientside storage.
 
@@ -58,7 +63,7 @@ will remove a database from clientside storage.
 
 ## Examples
 
-Check the example folder for a demo.
+Check the example folder for a fun demo.
 
 
 ## License

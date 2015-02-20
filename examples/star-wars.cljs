@@ -26,9 +26,8 @@
 ;; or retractions will be saved and override this set of facts.
 ;; This allows a program to store its info persistently!
 ;; For reference: http://www.chartgeek.com/star-wars-family-tree/
-(defonce sw-characters-template
+(def sw-characters-template
   (pc/init-facts test-db "characters" test-atom
-                 (pldb/db
                   [parent "Shmi Skywalker" "Anakin Skywalker"]
                   [parent "Ruwee Naberrie" "Padme Amidala"]
                   [parent "Jorbal Naberrie" "Padme Amidala"]
@@ -67,7 +66,7 @@
                   [male "Ben Skywalker"]
                   [male "Han Solo"]
                   [male "Jacen Solo"]
-                  [male "Anakin Solo"])))
+                  [male "Anakin Solo"]))
 
 ;; Find Luke's father (he has two because of adoption)
 (println (pm/with-db @test-atom
@@ -127,7 +126,7 @@
 
 ;; What if we only care about one relationship and want to delete
 ;; everything else?
-(pc/add-facts! test-db "characters" test-atom
+(pc/reset-facts! test-db "characters" test-atom
                [parent "???" "Jar Jar Binks"]
                [female "???"]
                [male "???"]
@@ -141,7 +140,14 @@
            (lm/run* [q]
              (male "Jar Jar Binks"))))
 
-;; Looks like Jar Jar is stuck in our database (oh no) and everything worked!
+;; Is Jar Jar really the only thing we have?
+(println (pm/with-db @test-atom
+           (lm/run* [q]
+             (lm/fresh [p s]
+               (parent p s)
+               (lm/== q [p s])))))
+
+;; Yup, Jar Jar is the only thing in there (oh no) and everything worked!
 ;; If you want to delete this experiment do:
 (pc/clear test-db "characters")
 
