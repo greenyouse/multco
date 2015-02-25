@@ -3,30 +3,35 @@
 This library is for persistent, clientside
 [pldb](https://github.com/clojure/core.logic) databases.
 
+This version is built on top of [ydn-db](http://dev.yathit.com/) but
+sadly doesn't work quite yet. I wrote a temporary Web Storage
+implementation but my plan is to remove it after completing a ydn-db
+version.  
+
+Any help finishing this would be greatly appreciated!
+
 ## Installation
 
 Add this dependency to your project.clj:
 ```clj
-[com.greenyouse/pldb-cache "0.1.0"]
+[com.greenyouse/pldb-cache "0.1.0-webstorage"]
 ```
 
 ## Usage
 
-Before doing anything, declare a new clientside database using `setup`:
+The main feature of this library is a `db-atom`, which holds a pldb
+database in memory and caches any changes to it into clientside storage
+(either IndexedDB, WebSQL, Web Storage, or UserData depending on what's
+available). 
 
-```clj
-(def db
-  (p-cache/setup "my-db"))
-```
-
-When your program starts, load the database using `init-facts`. This
+When your program starts, load the database using `db-atom`. This
 will either load a given data template, if the  program database has
-never been altered, or load the lastest stored state of your program. 
+never been altered, or load the lastest state of your program. 
 
 ```clj
-(defonce some-data-template
-   (p-cache/init-facts app-db "my-app" app-atom
-                       [database code goes here]))
+(defonce app-atom
+   (p-cache/db-atom "app-db" "db-store" :facts
+                    [[database code goes here]]))
 ```
 
 This means persistent clientside storage for your app! The database is
@@ -37,19 +42,19 @@ saved to the clientside storage and the in-memory database.
 To add data use `add-facts!`:
 
 ```clj
-(p-cache/add-facts! db "my-app" app-atom [some new fact(s)])
+(p-cache/add-facts! app-atom [some new fact(s)])
 ```
 
-To remove data use `remove-facts!`:
+To remove data use `rm-facts!`:
 
 ```clj
-(p-cache/remove-facts! db "my-app" app-atom [rm some fact(s)])
+(p-cache/rm-facts! app-atom [rm some fact(s)])
 ```
 
 A database can also be reset using `reset-facts!`:
 
 ```clj
-(p-cache/reset-facts! db "my-app" app-atom [new fact(s) to use])
+(p-cache/reset-facts! app-atom [new fact(s) to use])
 ```
 
 If you need to delete things, `clear` will empty a database and `rm-db`

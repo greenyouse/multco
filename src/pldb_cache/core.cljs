@@ -37,6 +37,15 @@
                  ^string db ^string store ^:mutable db-state]
 
   IDatabase
+  ;; FIXME: pldb-load must be inlined into db-atom and the default value of
+  ;; "state" in db-atom must be set to the loaded pldb dataset. Loading the
+  ;; dataset requires some black magic since the value is in an asynchronous JS
+  ;; callback.
+  ;;
+  ;; If that's impossible, then we should look into extending a few core ydn-db
+  ;; database functions because it's a Google Closure lib. Web Storage is so
+  ;; limited compared to the power of ydn-db, so hopefully this is possible
+  ;; somehow!
   (-pldb-load [this facts]
     (transactor)
     (set! db-state (cldb/setup db))
@@ -59,7 +68,7 @@
     (let [new-db (apply pldb/db facts)]
       (put! trans-chan [db-state store new-db])
       (-reset! this new-db)))
-  (-pldb-clear! [this delete]
+  (-pldb-clear! [this delete]  ;FIXME: change this terrible fn
     (cldb/rm-db db)
     (set! state nil) ;clear the atom
     (set! db-state nil)
@@ -146,6 +155,7 @@
   [a & facts]
   (-pldb-reset! a facts))
 
+;; FIXME: make :delete only remove the database associated with the atom
 (defn clear!
   "Clears the atom and all associated data stores from clientside storage but
   keeps the clientside db. With the option ':delete true', the clientside db
