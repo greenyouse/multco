@@ -3,11 +3,16 @@
 This library is for persistent, clientside
 [pldb](https://github.com/clojure/core.logic) databases.
 
+This version of pldb-cache only works over Web Storage (aka
+localStorage). Hopefully the ydn-db branch can be finished to allow
+pldb-cache to work over IndexedDB, WebSQL, Web Storage, and
+UserData. Any contributions are welcome!
+
 ## Installation
 
 Add this dependency to your project.clj:
 ```clj
-[com.greenyouse/pldb-cache "0.1.0"]
+[com.greenyouse/pldb-cache "0.1.0-webstorage]
 ```
 
 ## Usage
