@@ -24,10 +24,8 @@
 (defprotocol IDatabase
   (-pldb-add! [this facts])
   (-pldb-remove! [this facts])
-  (-pldb-reset! [this facts])
-  (-pldb-clear! [this]))
+  (-pldb-reset! [this facts]))
 
-;; FIXME: make names for state/db-state better to avoid confusion
 (deftype DBAtom [^:mutable state meta validator watches ^string store]
 
   IDatabase
@@ -43,10 +41,6 @@
     (let [new-db (apply pldb/db facts)]
       (put! trans-chan [store new-db])
       (-reset! this new-db)))
-  (-pldb-clear! [this]
-    (s/clear-db store)
-    (put! trans-chan [store {}]) ;reset to an empty pldb database
-    (-reset! this {}))
 
   IReset
   (-reset! [this new-value]
@@ -131,9 +125,9 @@
   (-pldb-reset! a facts))
 
 (defn clear!
-  "Clears the atom and all associated clientside storage."
+  "Resets the data to an empty pldb database"
   [a]
-  (-pldb-clear! a))
+  (-pldb-reset! a nil))
 
 (defn rm-db
   "Removes all clientside data (meant only for things like uninstalling a program)."
