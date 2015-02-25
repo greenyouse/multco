@@ -1,11 +1,8 @@
 (ns example.star-wars
   (:require [pldb-cache.core :as pc]
-            [clodexeddb.core :as cldb]
             [cljs.core.logic.pldb :as pldb])
   (:require-macros [cljs.core.logic.macros :as lm]
                    [cljs.core.logic.pldb :as pm]))
-
-;; NOTE: IndexedDB is disabled in private browsing mode
 
 (pm/db-rel parent Parent Child)
 (pm/db-rel female Person)
@@ -16,7 +13,7 @@
 ;; This allows a program to store its info persistently!
 ;; For reference: http://www.chartgeek.com/star-wars-family-tree/
 (def test-atom
-  (pc/db-atom "test" "woot" :facts
+  (pc/db-atom "woot" :facts
               [[parent "Shmi Skywalker" "Anakin Skywalker"]
                [parent "Ruwee Naberrie" "Padme Amidala"]
                [parent "Jorbal Naberrie" "Padme Amidala"]
@@ -115,7 +112,7 @@
 
 
 ;; What if we only care about one relationship and want to delete
-;; everything else?
+;; everything else? Just reset the database:
 (pc/reset-facts! test-atom
                  [parent "???" "Jar Jar Binks"]
                  [female "???"]
@@ -141,4 +138,4 @@
 (pc/clear! test-atom)
 
 ;; and here's how to delete the entire database:
-(pc/clear! test-atom :delete true)
+(pc/rm-db)

@@ -1,9 +1,8 @@
 (ns pldb-cache.core
-  (:require [clodexeddb.core :as cldb]
+  (:require [pldb-cache.storage :as s]
             [cljs.reader :as reader]
             [cljs.core.logic.pldb :as pldb]
-            [cljs.core.async :as async :refer [put! <! chan]]
-            ydn.db)
+            [cljs.core.async :as async :refer [put! <! chan]])
   (:require-macros [cljs.core.async.macros :refer [go-loop]]))
 
 (def ^:private trans-chan (chan))
@@ -12,10 +11,9 @@
   "Transactor to cache the in-memory database asynchronously"
   []
   (go-loop []
-    (let [[db name new-db] (<! trans-chan)
-          val {:name name :value (pr-str new-db)}]
-      (try (cldb/clear db "database" name)
-           (cldb/add  db "database" val)
+    (let [[store val] (<! trans-chan)]
+      (try (s/clear-db store)
+           (s/add-db store val)
            (catch js/Error e
              (.log js/console "pldb-cache Error: improper message to transactor")))
       (recur))))
@@ -24,47 +22,31 @@
 ;;; DB Atom
 
 (defprotocol IDatabase
-  (-pldb-load [this facts]
-    "Defines a new clientside database.")
   (-pldb-add! [this facts])
   (-pldb-remove! [this facts])
   (-pldb-reset! [this facts])
-  (-pldb-clear! [this delete]))
+  (-pldb-clear! [this]))
 
-;; state is the pldb database state, db-state is the value of cldb/setup
 ;; FIXME: make names for state/db-state better to avoid confusion
-(deftype DBAtom [^:mutable state meta validator watches
-                 ^string db ^string store ^:mutable db-state]
+(deftype DBAtom [^:mutable state meta validator watches ^string store]
 
   IDatabase
-  (-pldb-load [this facts]
-    (transactor)
-    (set! db-state (cldb/setup db))
-    (cldb/get-query db-state "database" store
-                    (fn [e]
-                      (if (= e js/undefined)
-                        (-pldb-reset! this facts)
-                        (let [new-db (-> (get e "value")
-                                         (reader/read-string))]
-                          (-reset! this new-db))))))
   (-pldb-add! [this facts]
     (let [new-db (apply pldb/db-facts state facts)]
-      (put! trans-chan [db-state store new-db])
+      (put! trans-chan [store new-db])
       (-reset! this new-db)))
   (-pldb-remove! [this facts]
     (let [new-db (apply pldb/db-retractions state facts)]
-      (put! trans-chan [db-state store new-db])
+      (put! trans-chan [store new-db])
       (-reset! this new-db)))
   (-pldb-reset! [this facts]
     (let [new-db (apply pldb/db facts)]
-      (put! trans-chan [db-state store new-db])
+      (put! trans-chan [store new-db])
       (-reset! this new-db)))
-  (-pldb-clear! [this delete]
-    (cldb/rm-db db)
-    (set! state nil) ;clear the atom
-    (set! db-state nil)
-    (if-not delete
-      (-pldb-load this nil))) ;reload the database (just clears stores)
+  (-pldb-clear! [this]
+    (s/clear-db store)
+    (put! trans-chan [store {}]) ;reset to an empty pldb database
+    (-reset! this {}))
 
   IReset
   (-reset! [this new-value]
@@ -108,15 +90,13 @@
 
 (defn db-atom
   "This is a variation of the standard Clojure atom that holds a pldb database
-  in memory and caches any pldb updates to clientside storage. The first
-  argument, db, is the name of a clientside database for your project. The second
-  argument, store, is the name of a pldb store. Generally, a project should only
-  use one db to hold all of its pldb stores.
+  in memory and caches any pldb updates to clientside storage. The first argument
+  is the name of a pldb store and is used as the key name for localStorage.
 
   A new :facts keyword is used to define a template pldb database wrapped in a
   sequential data structure (like a vector or list):
 
-  (db-atom \"db\" \"store\"
+  (db-atom \"store\"
            :facts [[some db items] [some more items]]
            :meta metadata-map
            :validator validate-fn)
@@ -126,10 +106,14 @@
   the pldb store will ignore these facts and use the previous database state
   instead."
   ;; HACK: facts shouldn't have to be a key, hard to get around that though
-  ([db store & {:keys [meta validator facts]}]
-   (let [a (DBAtom. nil meta validator nil db store nil)]
-     (-pldb-load a facts)
-     a)))
+  [store & {:keys [meta validator facts]}]
+  (transactor)
+  (let [state (if (s/get-db store)
+                (reader/read-string (s/get-db store))
+                (let [new-db (apply pldb/db facts)]
+                  (put! trans-chan [store new-db])
+                  new-db))]
+    (DBAtom. state meta validator nil store)))
 
 (defn add-facts!
   "Adds new facts and caches the new state."
@@ -147,9 +131,11 @@
   (-pldb-reset! a facts))
 
 (defn clear!
-  "Clears the atom and all associated data stores from clientside storage but
-  keeps the clientside db. With the option ':delete true', the clientside db
-  and all data will be permenantely deleted (making all connected db-atoms
-  unsuable)."
-  [a & {:keys [delete]}]
-  (-pldb-clear! a delete))
+  "Clears the atom and all associated clientside storage."
+  [a]
+  (-pldb-clear! a))
+
+(defn rm-db
+  "Removes all clientside data (meant only for things like uninstalling a program)."
+  []
+  (s/rm-db))
