@@ -6,9 +6,7 @@ This library is for persistent, clientside
 This version is built on top of [ydn-db](http://dev.yathit.com/) but
 sadly doesn't work quite yet. I wrote a temporary Web Storage
 implementation but my plan is to remove it after completing a ydn-db
-version.  
-
-Any help finishing this would be greatly appreciated!
+version (see the webstorage branch).  
 
 ## Installation
 
