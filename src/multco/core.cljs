@@ -125,11 +125,13 @@
   (-pldb-reset! a facts))
 
 (defn clear!
-  "Resets the data to an empty pldb database"
+  "Resets the data to an empty pldb database."
   [a]
   (-pldb-reset! a nil))
 
 (defn rm-db
-  "Removes all clientside data (meant only for things like uninstalling a program)."
-  []
-  (s/rm-db))
+  "Resets the data to an empty pldb database and removes the database from
+  localStorage."
+  [a]
+  (reset! a nil)
+  (s/clear-db (.-store a)))
