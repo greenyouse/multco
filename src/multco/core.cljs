@@ -1,5 +1,5 @@
-(ns pldb-cache.core
-  (:require [pldb-cache.storage :as s]
+(ns multco.core
+  (:require [multco.storage :as s]
             [cljs.reader :as reader]
             [cljs.core.logic.pldb :as pldb]
             [cljs.core.async :as async :refer [put! <! chan]])
@@ -15,7 +15,7 @@
       (try (s/clear-db store)
            (s/add-db store val)
            (catch js/Error e
-             (.log js/console "pldb-cache Error: improper message to transactor")))
+             (.log js/console "Multco cache Error: improper message to transactor")))
       (recur))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

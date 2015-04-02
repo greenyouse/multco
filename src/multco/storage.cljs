@@ -1,4 +1,4 @@
-(ns pldb-cache.storage)
+(ns multco.storage)
 
 ;; clear, getItem, key, removeItem, setItem
 (defn add-db

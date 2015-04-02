@@ -1,5 +1,5 @@
 (ns example.star-wars
-  (:require [pldb-cache.core :as pc]
+  (:require [multco.core :as pc]
             [cljs.core.logic.pldb :as pldb])
   (:require-macros [cljs.core.logic.macros :as lm]
                    [cljs.core.logic.pldb :as pm]))

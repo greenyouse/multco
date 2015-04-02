@@ -1,18 +1,18 @@
-# pldb-cache
+# Multco
 
 This library is for persistent, clientside
 [pldb](https://github.com/clojure/core.logic) databases.
 
-This version of pldb-cache only works over Web Storage (aka
+This version of multco only works over Web Storage (aka
 localStorage). Hopefully the ydn-db branch can be finished to allow
-pldb-cache to work over IndexedDB, WebSQL, Web Storage, and
+multco to work over IndexedDB, WebSQL, Web Storage, and
 UserData. Any contributions are welcome!
 
 ## Installation
 
 Add this dependency to your project.clj:
 ```clj
-[com.greenyouse/pldb-cache "0.1.0-webstorage]
+[com.greenyouse/multco "0.1.0-webstorage]
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ Before doing anything, declare a new clientside database using `setup`:
 
 ```clj
 (def db
-  (p-cache/setup "my-db"))
+  (multco/setup "my-db"))
 ```
 
 When your program starts, load the database using `init-facts`. This
@@ -30,7 +30,7 @@ never been altered, or load the lastest stored state of your program.
 
 ```clj
 (defonce some-data-template
-   (p-cache/init-facts app-db "my-app" app-atom
+   (multco/init-facts app-db "my-app" app-atom
                        [database code goes here]))
 ```
 
@@ -42,28 +42,28 @@ saved to the clientside storage and the in-memory database.
 To add data use `add-facts!`:
 
 ```clj
-(p-cache/add-facts! db "my-app" app-atom [some new fact(s)])
+(multco/add-facts! db "my-app" app-atom [some new fact(s)])
 ```
 
 To remove data use `remove-facts!`:
 
 ```clj
-(p-cache/remove-facts! db "my-app" app-atom [rm some fact(s)])
+(multco/remove-facts! db "my-app" app-atom [rm some fact(s)])
 ```
 
 A database can also be reset using `reset-facts!`:
 
 ```clj
-(p-cache/reset-facts! db "my-app" app-atom [new fact(s) to use])
+(multco/reset-facts! db "my-app" app-atom [new fact(s) to use])
 ```
 
 If you need to delete things, `clear` will empty a database and `rm-db`
 will remove a database from clientside storage.
 
 ```clj
-(p-cache/clear db "my-app")
+(multco/clear db "my-app")
 
-(p-cache/rm-db "my-db")
+(multco/rm-db "my-db")
 ```
 
 ## Examples
