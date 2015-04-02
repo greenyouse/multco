@@ -1,5 +1,5 @@
-(ns example.star-wars
-  (:require [multco.core :as pc]
+(ns examples.star-wars.pldb
+  (:require [multco.core :as m]
             [cljs.core.logic.pldb :as pldb]
             [cljs.core.logic :as l]))
 
@@ -12,7 +12,7 @@
 ;; This allows a program to store its info persistently!
 ;; For reference: http://www.chartgeek.com/star-wars-family-tree/
 (def test-atom
-  (pc/db-atom "woot" :facts
+  (m/db-atom "woot" :facts
     [[parent "Shmi Skywalker" "Anakin Skywalker"]
      [parent "Ruwee Naberrie" "Padme Amidala"]
      [parent "Jorbal Naberrie" "Padme Amidala"]
@@ -85,7 +85,7 @@
 
 ;; Now let's add more facts to our database and see how the changes are
 ;; reflected in the queries
-(pc/add-facts! test-atom
+(m/add-facts! test-atom
   [parent "???" "Chewbacca"]
   [parent "???" "Anakin Skywalker"]
   [male "???"]
@@ -98,7 +98,7 @@
 
 
 ;; Let's get rid of that and go back to the default
-(pc/rm-facts! test-atom
+(m/rm-facts! test-atom
   [parent "???" "Chewbacca"]
   [parent "???" "Anakin Skywalker"]
   [male "???"]
@@ -112,7 +112,7 @@
 
 ;; What if we only care about one relationship and want to delete
 ;; everything else? Just reset the database:
-(pc/reset-facts! test-atom
+(m/reset-facts! test-atom
   [parent "???" "Jar Jar Binks"]
   [female "???"]
   [male "???"]
@@ -134,7 +134,7 @@
 
 ;; Yup, Jar Jar is the only thing in there (oh no) and everything worked!
 ;; If you want to delete this experiment do:
-(pc/clear! test-atom)
+(m/clear! test-atom)
 
 ;; and here's how to delete the entire database:
-(pc/rm-db test-atom)
+(m/rm-db test-atom)

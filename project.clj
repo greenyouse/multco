@@ -6,7 +6,8 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [org.clojure/clojurescript "0.0-3126"]
                  [org.clojure/core.logic "0.8.10"]
-                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]]
+                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
+                 [fogus/bacwn "0.4.0"]]
 
   :profiles {:dev {:dependencies [[weasel "0.6.0"]]}}
 
