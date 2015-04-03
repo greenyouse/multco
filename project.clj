@@ -1,4 +1,4 @@
-(defproject com.greenyouse/multco "0.1.0-webstorage" ;multi cogo (caching)
+(defproject com.greenyouse/multco "0.1.1-webstorage" ;multi cogo (caching)
   :description "Clientside cljs databases across platforms"
   :url "https://github.com/greenyouse/multco"
   :license {:name "BSD 2-Clause"
