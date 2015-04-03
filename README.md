@@ -48,7 +48,7 @@ program.
 
 This means persistent clientside storage for your app! The database is
 loaded into memory and stored in a special variation of an atom
-(`app-atom` in the above example).Subsequent additions or retractions to
+(`app-atom` in the above example). Subsequent additions or retractions to
 your database will be saved to the client-side storage and the in-memory
 database. 
 
