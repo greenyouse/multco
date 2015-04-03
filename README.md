@@ -18,6 +18,7 @@ Right now it covers:
 Add this dependency to your project.clj:
 ```clj
 [com.greenyouse/multco "0.1.1-webstorage]
+```
 
 ## Usage
 
