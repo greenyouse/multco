@@ -39,6 +39,9 @@ program.
 
 
 ```clj
+(ns super-app.core
+  (:require [multco.core :as multco]))
+
 (def app-atom
   (multco/pldb-atom "my-db" :facts 
     [[example foo bar]]))
