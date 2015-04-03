@@ -12,7 +12,7 @@
 ;; This allows a program to store its info persistently!
 ;; For reference: http://www.chartgeek.com/star-wars-family-tree/
 (def test-atom
-  (m/db-atom "woot" :facts
+  (m/db-atom "pldb-test" :facts
     [[parent "Shmi Skywalker" "Anakin Skywalker"]
      [parent "Ruwee Naberrie" "Padme Amidala"]
      [parent "Jorbal Naberrie" "Padme Amidala"]

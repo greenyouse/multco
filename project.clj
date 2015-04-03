@@ -7,7 +7,8 @@
                  [org.clojure/clojurescript "0.0-3126"]
                  [org.clojure/core.logic "0.8.10"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [fogus/bacwn "0.4.0"]]
+                 [fogus/bacwn "0.4.0"]
+                 [datascript "0.10.0"]]
 
   :profiles {:dev {:dependencies [[weasel "0.6.0"]]}}
 
@@ -19,4 +20,5 @@
                                    :output-to "multco.js"
                                    :output-dir "out"
                                    :optimizations :none
-                                   :source-map true}}]})
+                                   :source-map true
+                                   :warnings {:single-segment-namespace false}}}]})

@@ -5,7 +5,7 @@
             [multco.core :as m]))
 
 ;; Do a bacwn schema like normal.
-(def db-base
+(def schema
   (make-database
     (relation :parent [:ancestor :child])
     (index :parent :child)
@@ -16,13 +16,12 @@
     (relation :female [:person])
     (index :female :person)))
 
-(multco.storage/clear-db "woot-woot")
 ;; This serves as a default set of datums. Any subsequent additions
 ;; or retractions will be saved and override this set of datums.
 ;; This allows a program to store its info persistently!
 ;; For reference: http://www.chartgeek.com/star-wars-family-tree/
 (defonce test-atom
-  (m/bacwn-atom "woot" db-base :facts
+  (m/bacwn-atom "bacwn-test" schema :facts
     [[:parent :ancestor "Shmi Skywalker" :child "Anakin Skywalker"]
      [:parent :ancestor "Ruwee Naberrie" :child "Padme Amidala"]
      [:parent :ancestor "Jorbal Naberrie" :child "Padme Amidala"]
