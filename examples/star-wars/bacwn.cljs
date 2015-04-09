@@ -20,47 +20,46 @@
 ;; or retractions will be saved and override this set of datums.
 ;; This allows a program to store its info persistently!
 ;; For reference: http://www.chartgeek.com/star-wars-family-tree/
-(defonce test-atom
-  (m/bacwn-atom "bacwn-test" schema :facts
-    [[:parent :ancestor "Shmi Skywalker" :child "Anakin Skywalker"]
-     [:parent :ancestor "Ruwee Naberrie" :child "Padme Amidala"]
-     [:parent :ancestor "Jorbal Naberrie" :child "Padme Amidala"]
-     [:parent :ancestor "Cliegg Lars" :child "Owen Lars"]
-     [:parent :ancestor "Ownen Lars" :child "Luke Skywalker"]
-     [:parent :ancestor "Beru Lars" :child "Luke Skywalker"]
-     [:parent :ancestor "Luke Skywalker" :child "Ben Skywalker"]
-     [:parent :ancestor "Mara Jade" :child "Ben Skywalker"]
-     [:parent :ancestor "Anakin Skywalker" :child "Luke Skywalker"]
-     [:parent :ancestor "Padme Amidala" :child "Luke Skywalker"]
-     [:parent :ancestor "Anakin Skywalker" :child "Princess Leia"]
-     [:parent :ancestor "Padme Amidala" :child "Princess Leia"]
-     [:parent :ancestor "Bail Organa" :child "Princess Leia"]
-     [:parent :ancestor "Breha Organa" :child "Princess Leia"]
-     [:parent :ancestor "Princess Leia" :child "Jaina Solo"]
-     [:parent :ancestor "Princess Leia" :child "Jacen Solo"]
-     [:parent :ancestor "Princess Leia" :child "Anakin Solo"]
-     [:parent :ancestor "Han Solo" :child "Jaina Solo"]
-     [:parent :ancestor "Han Solo" :child "Jacen Solo"]
-     [:parent :ancestor "Han Solo" :child "Anakin Solo"]
+(m/bacwn-atom test-atom "test" "bacwn-test" schema :facts
+  [[:parent :ancestor "Shmi Skywalker" :child "Anakin Skywalker"]
+   [:parent :ancestor "Ruwee Naberrie" :child "Padme Amidala"]
+   [:parent :ancestor "Jorbal Naberrie" :child "Padme Amidala"]
+   [:parent :ancestor "Cliegg Lars" :child "Owen Lars"]
+   [:parent :ancestor "Ownen Lars" :child "Luke Skywalker"]
+   [:parent :ancestor "Beru Lars" :child "Luke Skywalker"]
+   [:parent :ancestor "Luke Skywalker" :child "Ben Skywalker"]
+   [:parent :ancestor "Mara Jade" :child "Ben Skywalker"]
+   [:parent :ancestor "Anakin Skywalker" :child "Luke Skywalker"]
+   [:parent :ancestor "Padme Amidala" :child "Luke Skywalker"]
+   [:parent :ancestor "Anakin Skywalker" :child "Princess Leia"]
+   [:parent :ancestor "Padme Amidala" :child "Princess Leia"]
+   [:parent :ancestor "Bail Organa" :child "Princess Leia"]
+   [:parent :ancestor "Breha Organa" :child "Princess Leia"]
+   [:parent :ancestor "Princess Leia" :child "Jaina Solo"]
+   [:parent :ancestor "Princess Leia" :child "Jacen Solo"]
+   [:parent :ancestor "Princess Leia" :child "Anakin Solo"]
+   [:parent :ancestor "Han Solo" :child "Jaina Solo"]
+   [:parent :ancestor "Han Solo" :child "Jacen Solo"]
+   [:parent :ancestor "Han Solo" :child "Anakin Solo"]
 
-     [:female :person "Shmi Skywalker"]
-     [:female :person "Jorbal Naberrie"]
-     [:female :person "Beru Lars"]
-     [:female :person "Mara Jade"]
-     [:female :person "Padme Amidala"]
-     [:female :person "Breha Organa"]
-     [:female :person "Princess Leia"]
-     [:female :person "Jaina Solo"]
+   [:female :person "Shmi Skywalker"]
+   [:female :person "Jorbal Naberrie"]
+   [:female :person "Beru Lars"]
+   [:female :person "Mara Jade"]
+   [:female :person "Padme Amidala"]
+   [:female :person "Breha Organa"]
+   [:female :person "Princess Leia"]
+   [:female :person "Jaina Solo"]
 
-     [:male :person "Cliegg Lars"]
-     [:male :person "Owen Lars"]
-     [:male :person "Ruwee Naberrie"]
-     [:male :person "Anakin Skywalker"]
-     [:male :person "Bail Organa"]
-     [:male :person "Ben Skywalker"]
-     [:male :person "Han Solo"]
-     [:male :person "Jacen Solo"]
-     [:male :person "Anakin Solo"]]))
+   [:male :person "Cliegg Lars"]
+   [:male :person "Owen Lars"]
+   [:male :person "Ruwee Naberrie"]
+   [:male :person "Anakin Skywalker"]
+   [:male :person "Bail Organa"]
+   [:male :person "Ben Skywalker"]
+   [:male :person "Han Solo"]
+   [:male :person "Jacen Solo"]
+   [:male :person "Anakin Solo"]])
 
 ;; The rest is normal bacwn.
 (def rules
@@ -86,6 +85,7 @@
 ;; Find Luke's mom (step-mom too)
 (println (bacwn/run-work-plan wp-2 @test-atom {'??name "Luke Skywalker"}))
 
+;; FIXME: but there is an error here because he has none!
 ;; Luke has only one grandpa (not an error)
 (println (bacwn/run-work-plan wp-3 @test-atom {'??name "Luke Skywalker"}))
 
