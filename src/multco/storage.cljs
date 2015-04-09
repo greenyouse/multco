@@ -79,11 +79,3 @@
         (doall (reset! atm facts)
           (add-db db store facts)) ;add the facts to db when empty
         (reset! atm (reader/read-string res))))))
-
-(comment (def woot (atom nil))
-         (reset! woot "hi")
-         (println @woot)
-
-         (atom-lookup "test" "meow" woot "{:hiya \"moot\"}")
-
-         (clear-db "test" "meow"))

@@ -178,7 +178,7 @@
     (let [report (-> schema dscript/empty-db (atom :meta meta)
                    (dscript/transact! facts))
           new-db (:db-after report)]
-      (put! trans-chan [store new-db])
+      (put! trans-chan [db store new-db])
       (-reset! this new-db)))
 
   IReset

@@ -87,15 +87,13 @@
   database state instead."
   [name db store schema & {:keys [meta validator facts]}]
   `(let [conn# (datascript/create-conn ~schema)
-         report# (datascript/transact! conn# ~facts)
-         new-db# @conn#]
+         report# (datascript/transact! conn# ~facts)]
      (multco.core/transactor)
      (def ~name
        (multco.core/DatascriptAtom. nil
          (assoc ~meta :listeners (atom {}))
          ~validator nil ~schema ~db ~store))
-     ;; FIXME: the state needs {:db-after state} to read from db?
-     (multco.storage/atom-lookup ~db ~store ~name new-db#)))
+     (multco.storage/atom-lookup ~db ~store ~name @conn#)))
 
 (comment (clojure.pprint/pprint
             (macroexpand '(datascript-atom test-atom "test" "meow" {:schema ""} :facts {:some "stuff"}))))
