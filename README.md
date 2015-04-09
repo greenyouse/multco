@@ -1,12 +1,8 @@
 # Multco
 
 This library adds cross-platform persistence to existing ClojureScript
-databases.
-
-This version of multco only works over Web Storage (aka
-localStorage). The goal, however, is to use the ydn-db polyfill to allow
-multco to work over IndexedDB, WebSQL, Web Storage, and UserData. Any
-contributions are welcome! 
+databases. It uses a storage polyfill with support for IndexedDB,
+WebSQL, Web Storage, and UserData, so it works just about everywhere.
 
 Right now it covers:
 * [pldb](https://github.com/clojure/core.logic) 
@@ -17,7 +13,7 @@ Right now it covers:
 
 Add this dependency to your project.clj:
 ```clj
-[com.greenyouse/multco "0.1.1-webstorage]
+[com.greenyouse/multco "0.1.2-alpha]
 ```
 
 ## Usage
@@ -41,10 +37,9 @@ program.
 (ns super-app.core
   (:require [multco.core :as multco]))
 
-(def app-atom
-  (multco/pldb-atom "my-db" :facts 
-    [[example foo bar]]))
-```
+(multco/pldb-atom app-atom "app-name" "my-db" :facts 
+  [[example foo bar]])
+  ```
 
 This means persistent clientside storage for your app! The database is
 loaded into memory and stored in a special variation of an atom

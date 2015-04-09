@@ -1,4 +1,4 @@
-(defproject com.greenyouse/multco "0.1.1-SNAPSHOT" ;multi cogo (caching)
+(defproject com.greenyouse/multco "0.1.2-SNAPSHOT" ;multi cogo (caching)
   :description "Clientside cljs databases across platforms"
   :url "https://github.com/greenyouse/multco"
   :license {:name "BSD 2-Clause"
@@ -9,7 +9,7 @@
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [fogus/bacwn "0.4.0"]
                  [datascript "0.10.0"]
-                 [com.greenyouse/clodexeddb "0.1.1"]] ;FIX?
+                 [com.greenyouse/clodexeddb "0.1.0"]]
 
   :profiles {:dev {:dependencies [[weasel "0.6.0"]
                                   [com.cemerick/piggieback "0.1.6-SNAPSHOT"]]
