@@ -17,84 +17,85 @@
 ;; This allows a program to store its info persistently!
 ;; For reference: http://www.chartgeek.com/star-wars-family-tree/
 ;; (it takes the place of datascript's conn)
-(m/datascript-atom test-atom "test" "datascript-test" schema :facts
-  [{:db/id 1
-    :person/name "Shmi Skywalker"
-    :person/children 9 ;"Anakin Skywalker"
-    :person/gender "female"}
-   {:db/id 2
-    :person/name "Cliegg Lars"
-    :person/children 5 ;"Owen Lars"
-    :person/gender "male"}
-   {:db/id 3
-    :person/name "Ruwee Naberrie"
-    :person/children 9 ;"Padme Amadala"
-    :person/gender "male"}
-   {:db/id 4
-    :person/name "Jobal Naberrie"
-    :person/children 9 ;"Padme Amidala"
-    :person/gender "female"}
-   {:db/id 5
-    :person/name "Owen Lars"
-    :person/ancestor 2; "Cliegg Lars"
-    :person/children 11; "Luke Skywalker"
-    :person/gender "male"}
-   {:db/id 6
-    :person/name "Beru Lars"
-    :person/children 11; "Luke Skywalker"
-    :person/gender "female"}
-   {:db/id 7
-    :person/name "Bail Organa"
-    :person/children 13; "Princess Leia"
-    :person/gender "male"}
-   {:db/id 8
-    :person/name "Breha Organa"
-    :person/children 13; "Princess Leia"
-    :person/gender "female"}
-   {:db/id 9
-    :person/name "Anakin Skywalker"
-    :person/ancestor 1; "Shmi Skywalker"
-    :person/children [11 13]
-    :person/gender "male"}
-   {:db/id 10
-    :person/name "Padme Amadala"
-    :person/ancestor [3 4]
-    :person/children [11 13]
-    :person/gender "female"}
-   {:db/id 11
-    :person/name "Luke Skywalker"
-    :person/ancestor [5 6 9 10]
-    :person/children 15; "Ben Skywalker"
-    :person/gender "male"}
-   {:db/id 12
-    :person/name "Mara Jade"
-    :person/children 15; "Ben Skywalker"
-    :person/gender "female"}
-   {:db/id 13
-    :person/name "Princess Leia"
-    :person/ancestor [7 8 9 10]
-    :person/children [16 17 18]
-    :person/gender "female"}
-   {:db/id 14
-    :person/name "Han Solo"
-    :person/children [16 17 18]
-    :person/gender "male"}
-   {:db/id 15
-    :person/name "Ben Skywalker"
-    :person/ancestor [11 12]
-    :person/gender "male"}
-   {:db/id 16
-    :person/name "Jaina Solo"
-    :person/ancestor [13 14]
-    :person/gender "female"}
-   {:db/id 17
-    :person/name "Jacen Solo"
-    :person/ancestor [13 14]
-    :person/gender "male"}
-   {:db/id 18
-    :person/name "Anakin Solo"
-    :person/ancestor [13 14]
-    :person/gender "male"}])
+(def test-atom
+  (m/datascript-atom "test" "datascript-test" schema :facts
+    [{:db/id 1
+      :person/name "Shmi Skywalker"
+      :person/children 9 ;"Anakin Skywalker"
+      :person/gender "female"}
+     {:db/id 2
+      :person/name "Cliegg Lars"
+      :person/children 5 ;"Owen Lars"
+      :person/gender "male"}
+     {:db/id 3
+      :person/name "Ruwee Naberrie"
+      :person/children 9 ;"Padme Amadala"
+      :person/gender "male"}
+     {:db/id 4
+      :person/name "Jobal Naberrie"
+      :person/children 9 ;"Padme Amidala"
+      :person/gender "female"}
+     {:db/id 5
+      :person/name "Owen Lars"
+      :person/ancestor 2; "Cliegg Lars"
+      :person/children 11; "Luke Skywalker"
+      :person/gender "male"}
+     {:db/id 6
+      :person/name "Beru Lars"
+      :person/children 11; "Luke Skywalker"
+      :person/gender "female"}
+     {:db/id 7
+      :person/name "Bail Organa"
+      :person/children 13; "Princess Leia"
+      :person/gender "male"}
+     {:db/id 8
+      :person/name "Breha Organa"
+      :person/children 13; "Princess Leia"
+      :person/gender "female"}
+     {:db/id 9
+      :person/name "Anakin Skywalker"
+      :person/ancestor 1; "Shmi Skywalker"
+      :person/children [11 13]
+      :person/gender "male"}
+     {:db/id 10
+      :person/name "Padme Amadala"
+      :person/ancestor [3 4]
+      :person/children [11 13]
+      :person/gender "female"}
+     {:db/id 11
+      :person/name "Luke Skywalker"
+      :person/ancestor [5 6 9 10]
+      :person/children 15; "Ben Skywalker"
+      :person/gender "male"}
+     {:db/id 12
+      :person/name "Mara Jade"
+      :person/children 15; "Ben Skywalker"
+      :person/gender "female"}
+     {:db/id 13
+      :person/name "Princess Leia"
+      :person/ancestor [7 8 9 10]
+      :person/children [16 17 18]
+      :person/gender "female"}
+     {:db/id 14
+      :person/name "Han Solo"
+      :person/children [16 17 18]
+      :person/gender "male"}
+     {:db/id 15
+      :person/name "Ben Skywalker"
+      :person/ancestor [11 12]
+      :person/gender "male"}
+     {:db/id 16
+      :person/name "Jaina Solo"
+      :person/ancestor [13 14]
+      :person/gender "female"}
+     {:db/id 17
+      :person/name "Jacen Solo"
+      :person/ancestor [13 14]
+      :person/gender "male"}
+     {:db/id 18
+      :person/name "Anakin Solo"
+      :person/ancestor [13 14]
+      :person/gender "male"}]))
 
 
 ;; Find Luke's father + step-dad

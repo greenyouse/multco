@@ -7,8 +7,7 @@
             [fogus.datalog.bacwn.impl.database :as bacwn]
             [datascript :as dscript]
             ydn.db)
-  (:require-macros [cljs.core.async.macros :refer [go-loop]]
-                   [multco.core]))
+  (:require-macros [cljs.core.async.macros :refer [go-loop]]))
 
 (def ^:private trans-chan (chan))
 
@@ -17,8 +16,8 @@
   []
   (go-loop []
     (let [[db store val] (<! trans-chan)]
-      (try (s/clear-db db store)
-           (s/add-db db store val)
+      (try (s/clear-obj db store)
+           (s/add-obj db store val)
            (catch js/Error e
              (.log js/console "Multco Error: improper message to transactor")))
       (recur))))
@@ -89,6 +88,33 @@
   IHash
   (-hash [this] (goog/getUid this)))
 
+(defn pldb-atom
+  "This is a variation of the standard Clojure atom that holds a pldb database
+  in memory and caches any pldb updates to clientside storage. The first
+  argument is the name of the atom. The second argument is the database name
+  you'll use (it's idiomatic to use your app's name and keep your app
+  constrained to only one database). The third argument is the name of a pldb
+  store and is used as the key name for storage.
+
+  A new :facts keyword is used to define a template pldb database wrapped in a
+  sequential data structure (like a vector or list):
+
+  (pldb-atom \"app-name\" \"store\"
+    :facts [[some db items] [some more items]]
+    :meta metadata-map
+    :validator validate-fn)
+
+  These facts act as a default template for the pldb store. When a store is
+  first created, it will be populated with this set of facts. On subsequent
+  reloads, the pldb store will ignore these facts and use the previous
+  database state instead."
+  [db store & {:keys [meta validator facts]}]
+  (let [new-db (apply pldb/db facts)
+        atm (PldbAtom. nil meta validator nil db store)]
+    (transactor)
+    (s/atom-lookup db store atm new-db)
+    atm))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Bacwn
@@ -158,6 +184,34 @@
   IHash
   (-hash [this] (goog/getUid this)))
 
+(defn bacwn-atom
+  "This is a variation of the standard Clojure atom that holds a bacwn database
+  in memory and caches any bacwn updates to clientside storage. The first
+  argument is the name of the atom. The second argument is the database name
+  you'll use (it's idiomatic to use your app's name and keep your app
+  constrained to only one database). The third argument is the name of a bacwn
+  store and is used as the key name for storage. The fourth argument is a bacwn
+  schema.
+
+  A new :facts keyword is used to define a template bacwn database wrapped in a
+  sequential data structure (like a vector or list):
+
+  (bacwn-atom \"app-name\" \"store\" schema-name
+    :facts [[some db items] [some more items]]
+    :meta metadata-map
+    :validator validate-fn)
+
+  These facts act as a default template for the bacwn store. When a store is
+  first created, it will be populated with this set of facts. On subsequent
+  reloads, the bacwn store will ignore these facts and use the previous
+  database state instead."
+  [db store schema & {:keys [meta validator facts]}]
+  (let [new-db (apply bacwn/add-tuples schema facts)
+        atm (BacwnAtom. nil meta validator nil schema db store)]
+    (transactor)
+    (s/atom-lookup db store atm new-db)
+    atm))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; Datascript
@@ -221,6 +275,36 @@
   IHash
   (-hash [this] (goog/getUid this)))
 
+(defn datascript-atom
+  "This is a variation of the standard Clojure atom that holds a datascript
+  database in memory and caches any datascript updates to clientside storage.
+  The first argument is the name of the atom. The second argument is the
+  database name you'll use (it's idiomatic to use your app's name and keep
+  your app constrained to only one database). The third argument is the name of
+  a datascript store and is used as the key name for storage. The fourth
+  argument is a datascript schema.
+
+  A new :facts keyword is used to define a template datascript database
+  wrapped in a sequential data structure (like a vector or list):
+
+  (datascript-atom \"app-name\" \"store\" schema-name
+    :facts [[some db items] [some more items]]
+    :meta metadata-map
+    :validator validate-fn)
+
+  These facts act as a default template for the datascript store. When a store
+  is first created, it will be populated with this set of facts. On subsequent
+  reloads, the datascript store will ignore these facts and use the previous
+  database state instead."
+  [db store schema & {:keys [meta validator facts]}]
+  (let [conn (dscript/create-conn schema)
+        atm (DatascriptAtom. nil (assoc meta :listeners (atom {}))
+              validator nil schema db store)]
+    (transactor)
+    (dscript/transact! conn facts)
+    (s/atom-lookup db store atm @conn)
+    atm))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; General functions
@@ -250,4 +334,4 @@
   storage."
   [a]
   (reset! a nil)
-  (s/clear-db (.-db a) (.-store a)))
+  (s/clear-obj (.-db a) (.-store a)))
