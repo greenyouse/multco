@@ -1,4 +1,4 @@
-(defproject com.greenyouse/multco "0.1.2-alpha" ;multi cogo (caching)
+(defproject com.greenyouse/multco "0.1.2-beta" ;multi cogo (caching)
   :description "Clientside cljs databases across platforms"
   :url "https://github.com/greenyouse/multco"
   :license {:name "BSD 2-Clause"

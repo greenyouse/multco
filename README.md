@@ -12,9 +12,7 @@ Right now it covers:
 ## Installation
 
 Add this dependency to your project.clj:
-```clj
-[com.greenyouse/multco "0.1.2-alpha]
-```
+[![Clojars Project](http://clojars.org/com.greenyouse/multco/latest-version.svg)](http://clojars.org/com.greenyouse/multco)
 
 ## Usage
 
@@ -37,9 +35,10 @@ program.
 (ns super-app.core
   (:require [multco.core :as multco]))
 
-(multco/pldb-atom app-atom "app-name" "my-db" :facts 
+(def app-atom
+  (multco/pldb-atom "app-name" "my-db" :facts
   [[example foo bar]])
-  ```
+```
 
 This means persistent clientside storage for your app! The database is
 loaded into memory and stored in a special variation of an atom
