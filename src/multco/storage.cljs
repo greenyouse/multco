@@ -67,8 +67,6 @@
 (reader/register-tag-parser! "fogus.datalog.bacwn.impl.database.Relation"
   bdb/map->Relation)
 
-;; FIXME: when :empty is returned, core.async throws
-;;  "Uncaught Error: Request:a is not ISeqable"
 (defn atom-lookup
   "Takes IDB database info (db + store), a Multco atom, and facts for a cljs
   database. It tries to instantiate a new Multco atom. If the db exists,
@@ -78,6 +76,6 @@
   (go
     (let [res (<! (get-obj db obj))]
       (if (= :empty res)
-        (doall (reset! atm facts)
+        (do (reset! atm facts)
           (add-obj db obj facts)) ;add the facts to db when empty
         (reset! atm (reader/read-string res))))))
